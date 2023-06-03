@@ -45,6 +45,9 @@ go run cmd/server/main.go
 ```
 6. Tables will be created automatically
 
+## Postman Collection
+You can find the postman collection here: [Postman Collection](https://www.postman.com/micbun/workspace/simpletodo/request/20339334-2e90da6c-59cc-48a0-b7f3-cbf4c7d7c835)
+
 ## Usefully Scripts
 ### Generate Protobuf
 ```bash

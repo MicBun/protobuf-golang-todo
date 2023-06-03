@@ -1,0 +1,1 @@
+protoc --go_out=internal/infra/model/ internal/infra/model/*.proto

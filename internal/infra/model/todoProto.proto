@@ -1,0 +1,41 @@
+syntax = "proto3";
+
+package pb;
+option go_package = "../pb";
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/empty.proto";
+
+message Todo {
+  uint32 id = 1;
+  string task = 2;
+  bool status = 3;
+}
+
+message TodoList {
+  repeated Todo todos = 1;
+}
+
+message GetManyRequest {
+  optional uint32 limit = 1;
+  optional uint32 offset = 2;
+  optional bool status = 3;
+}
+
+message CreateOneRequest {
+  string task = 1;
+}
+
+message UpdateOneRequest {
+  uint32 id = 1;
+  string task = 2;
+  bool status = 3;
+}
+
+service TodoService {
+  rpc GetMany(GetManyRequest) returns (TodoList);
+  rpc GetOne(google.protobuf.UInt32Value) returns (Todo);
+  rpc CreateOne(CreateOneRequest) returns (google.protobuf.Empty);
+  rpc UpdateOne(UpdateOneRequest) returns (google.protobuf.Empty);
+  rpc DeleteOne(google.protobuf.UInt32Value) returns (google.protobuf.Empty);
+}

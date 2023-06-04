@@ -4,14 +4,15 @@ import (
 	"context"
 	"github.com/MicBun/protobuf-golang-todo/internal/domain"
 	"github.com/MicBun/protobuf-golang-todo/internal/domain/contract"
+	"github.com/MicBun/protobuf-golang-todo/internal/domain/entity"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/pb"
-	"github.com/golang/protobuf/ptypes/empty"
 	"github.com/pkg/errors"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 	"gorm.io/gorm"
 )
 
 type Todo struct {
+	pb.UnimplementedTodoServiceServer
 	todoRepo    contract.TodoRepo
 	transaction contract.TransactionManager
 }
@@ -21,22 +22,36 @@ func NewTodo(
 	transaction contract.TransactionManager,
 ) *Todo {
 	return &Todo{
+		pb.UnimplementedTodoServiceServer{},
 		todoRepo,
 		transaction,
 	}
 }
 
-func (t *Todo) CreateOne(ctx context.Context, in *pb.CreateOneRequest) (*empty.Empty, error) {
-	if err := t.transaction.Run(func(tx any) error {
-		return t.todoRepo.CreateOne(ctx, &contract.TodoRepoCreateOneProps{
+func (t *Todo) CreateOne(ctx context.Context, in *pb.CreateOneRequest) (*pb.Todo, error) {
+	var (
+		createdTodo entity.Todo
+		err         error
+	)
+	if errTransaction := t.transaction.Run(func(tx any) error {
+		createdTodo, err = t.todoRepo.CreateOne(ctx, &contract.TodoRepoCreateOneProps{
 			Task: in.Task,
 			Tx:   tx,
 		})
-	}); err != nil {
-		return nil, err
+		if err != nil {
+			return err
+		}
+
+		return nil
+	}); errTransaction != nil {
+		return nil, errTransaction
 	}
 
-	return &empty.Empty{}, nil
+	return &pb.Todo{
+		Id:     uint32(createdTodo.ID),
+		Task:   createdTodo.Task,
+		Status: createdTodo.Status,
+	}, nil
 }
 
 func (t *Todo) GetMany(ctx context.Context, in *pb.GetManyRequest) (*pb.TodoList, error) {
@@ -88,7 +103,7 @@ func (t *Todo) GetOne(ctx context.Context, id *wrapperspb.UInt32Value) (*pb.Todo
 	}, nil
 }
 
-func (t *Todo) UpdateOne(ctx context.Context, in *pb.UpdateOneRequest) (*empty.Empty, error) {
+func (t *Todo) UpdateOne(ctx context.Context, in *pb.UpdateOneRequest) (*pb.Todo, error) {
 	todo, err := t.todoRepo.GetOne(ctx, &contract.TodoRepoGetOneProps{
 		ID: uint(in.Id),
 	})
@@ -114,11 +129,15 @@ func (t *Todo) UpdateOne(ctx context.Context, in *pb.UpdateOneRequest) (*empty.E
 		return nil, errRun
 	}
 
-	return &empty.Empty{}, nil
+	return &pb.Todo{
+		Id:     in.Id,
+		Task:   todo.Task,
+		Status: in.Status,
+	}, nil
 }
 
-func (t *Todo) DeleteOne(ctx context.Context, id *wrapperspb.UInt32Value) (*empty.Empty, error) {
-	_, err := t.todoRepo.GetOne(ctx, &contract.TodoRepoGetOneProps{
+func (t *Todo) DeleteOne(ctx context.Context, id *wrapperspb.UInt32Value) (*pb.Todo, error) {
+	todo, err := t.todoRepo.GetOne(ctx, &contract.TodoRepoGetOneProps{
 		ID: uint(id.Value),
 	})
 	if err != nil {
@@ -138,5 +157,9 @@ func (t *Todo) DeleteOne(ctx context.Context, id *wrapperspb.UInt32Value) (*empt
 		return nil, errRun
 	}
 
-	return &empty.Empty{}, nil
+	return &pb.Todo{
+		Id:     id.Value,
+		Task:   todo.Task,
+		Status: todo.Status,
+	}, nil
 }

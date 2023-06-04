@@ -11,6 +11,7 @@ import (
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/db"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/echo"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/factory"
+	"github.com/MicBun/protobuf-golang-todo/internal/infra/grpc"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/repo"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/route"
 	"github.com/google/wire"
@@ -24,6 +25,7 @@ func InitApp(ctx context.Context) (*App, error) {
 		// Infra
 		echo.ProviderSet,
 		db.ProviderSet,
+		grpc.ProviderSet,
 
 		repo.NewTodo,
 		factory.NewTodo,

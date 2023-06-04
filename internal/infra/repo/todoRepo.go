@@ -2,6 +2,7 @@ package repo
 
 import (
 	"context"
+	"fmt"
 	"github.com/MicBun/protobuf-golang-todo/internal/domain/contract"
 	"github.com/MicBun/protobuf-golang-todo/internal/domain/entity"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/factory"
@@ -25,17 +26,37 @@ func NewTodo(
 	}
 }
 
-func (r *Todo) CreateOne(ctx context.Context, props *contract.TodoRepoCreateOneProps) error {
+func (r *Todo) CreateOne(ctx context.Context, props *contract.TodoRepoCreateOneProps) (entity.Todo, error) {
 	query := r.db.WithContext(ctx)
 	if tx, ok := props.Tx.(*gorm.DB); ok {
 		query = tx.WithContext(ctx)
 	}
 
-	return query.
+	todo := model.Todo{
+		Task: props.Task,
+	}
+	if err := query.
 		Model(&model.Todo{}).
-		Create(&model.Todo{
-			Task: props.Task,
-		}).Error
+		Create(&todo).Error; err != nil {
+		return entity.Todo{}, errors.WithStack(err)
+	}
+
+	fmt.Println("todo: ", todo)
+
+	return r.factory.CreateFromPgModel(&todo), nil
+
+	////
+	////return query.
+	////	Model(&model.Todo{}).
+	////	Create(&model.Todo{
+	////		Task: props.Task,
+	////	}).Error
+	//
+	//return query.
+	//	Model(&model.Todo{}).
+	//	Create(&model.Todo{
+	//		Task: props.Task,
+	//	}).Error
 }
 
 func (r *Todo) FindAll(ctx context.Context, props *contract.TodoRepoFindAllProps) ([]entity.Todo, error) {

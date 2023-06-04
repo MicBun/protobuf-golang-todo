@@ -6,7 +6,7 @@ import (
 )
 
 type TodoRepo interface {
-	CreateOne(ctx context.Context, props *TodoRepoCreateOneProps) error
+	CreateOne(ctx context.Context, props *TodoRepoCreateOneProps) (entity.Todo, error)
 	FindAll(ctx context.Context, props *TodoRepoFindAllProps) ([]entity.Todo, error)
 	GetOne(ctx context.Context, props *TodoRepoGetOneProps) (entity.Todo, error)
 	UpdateOne(ctx context.Context, props *TodoRepoUpdateOneProps) error

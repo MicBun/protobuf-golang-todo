@@ -1,1 +1,1 @@
-protoc --go_out=internal/infra/model/ internal/infra/model/*.proto
+protoc --go_out=internal/infra/model/ --go-grpc_out=internal/infra/model/ internal/infra/model/*.proto

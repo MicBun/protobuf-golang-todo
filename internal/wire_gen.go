@@ -13,6 +13,7 @@ import (
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/db"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/echo"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/factory"
+	"github.com/MicBun/protobuf-golang-todo/internal/infra/grpc"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/repo"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/route"
 )
@@ -29,9 +30,10 @@ func InitApp(ctx context.Context) (*App, error) {
 	repoTodo := repo.NewTodo(gormDB, todo)
 	postgresTransactionManager := db.NewPostgresTransactionManager(gormDB)
 	serviceTodo := service.NewTodo(repoTodo, postgresTransactionManager)
+	server := grpc.New(serviceTodo)
 	httpHandlerTodo := httpHandler.NewTodo(serviceTodo)
 	http := route.NewHTTP(httpHandlerTodo)
-	app, err := NewApp(echoEcho, gormDB, http)
+	app, err := NewApp(echoEcho, server, gormDB, http)
 	if err != nil {
 		return nil, err
 	}

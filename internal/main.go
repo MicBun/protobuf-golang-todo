@@ -8,30 +8,35 @@ import (
 	"github.com/go-playground/validator/v10"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"google.golang.org/grpc"
 	"gorm.io/gorm"
+	"net"
 	"net/http"
 	"os"
 )
 
 type App struct {
-	server    *echo.Echo
+	echo      *echo.Echo
+	grpc      *grpc.Server
 	mainDB    *gorm.DB
 	httpRoute *route.HTTP
 }
 
 func NewApp(
-	server *echo.Echo,
+	echo *echo.Echo,
+	grpc *grpc.Server,
 	mainDB *gorm.DB,
 	httpRoute *route.HTTP,
 ) (*App, error) {
 	app := &App{
-		server,
+		echo,
+		grpc,
 		mainDB,
 		httpRoute,
 	}
 
 	s := souin_echo.NewMiddleware(souin_echo.DevDefaultConfiguration)
-	router := app.server
+	router := app.echo
 	router.Use(s.Process)
 	router.Use(middleware.Logger())
 	router.Use(middleware.Recover())
@@ -44,11 +49,17 @@ func NewApp(
 }
 
 func (a *App) Serve() error {
-	return a.server.Start(os.Getenv("APP_ADDRESS"))
+	lis, err := net.Listen("tcp", ":50051")
+	if err != nil {
+		return err
+	}
+
+	return a.grpc.Serve(lis)
+	//return a.echo.Start(os.Getenv("APP_ADDRESS"))
 }
 
 func (a *App) Clean() error {
-	shutdownAppErr := a.server.Shutdown(context.Background())
+	shutdownAppErr := a.echo.Shutdown(context.Background())
 	if shutdownAppErr != nil {
 		return shutdownAppErr
 	}

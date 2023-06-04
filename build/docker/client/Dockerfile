@@ -10,4 +10,4 @@ COPY . ./
 
 EXPOSE 3000
 
-CMD "go build -gcflags='all=-N -l' -o ./tmp/server ./cmd/server/main.go"
+CMD ["air", "-c", ".air2.toml"]

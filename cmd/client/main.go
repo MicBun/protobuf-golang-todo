@@ -4,20 +4,21 @@ import (
 	"context"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/pb"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
 	"google.golang.org/protobuf/types/known/wrapperspb"
 	"log"
+	"os"
 	"time"
 )
 
 func main() {
-	conn, err := grpc.Dial("simple-todo:50051", grpc.WithInsecure())
+	conn, err := grpc.Dial(os.Getenv("GRPC_TARGET"), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	if err != nil {
 		log.Fatalf("Failed to connect: %v", err)
 	}
 	defer conn.Close()
 
 	client := pb.NewTodoServiceClient(conn)
-
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 	defer cancel()
 

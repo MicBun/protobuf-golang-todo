@@ -41,7 +41,7 @@ func TestTodo_CreateOneGRPC(t *testing.T) {
 		instance.mockTransaction.EXPECT().Run(mock.Anything).Run(func(callback func(interface{}) error) {
 			_ = callback("tx")
 		}).Return(nil)
-		instance.mockTodoRepo.EXPECT().CreateOne(mock.Anything, mock.Anything).Return(nil)
+		instance.mockTodoRepo.EXPECT().CreateOne(mock.Anything, mock.Anything).Return(entity.Todo{}, nil)
 
 		_, err := instance.service.CreateOne(context.Background(), &pb.CreateOneRequest{})
 
@@ -53,7 +53,7 @@ func TestTodo_CreateOneGRPC(t *testing.T) {
 		instance.mockTransaction.EXPECT().Run(mock.Anything).Run(func(callback func(interface{}) error) {
 			_ = callback("tx")
 		}).Return(assert.AnError)
-		instance.mockTodoRepo.EXPECT().CreateOne(mock.Anything, mock.Anything).Return(assert.AnError)
+		instance.mockTodoRepo.EXPECT().CreateOne(mock.Anything, mock.Anything).Return(entity.Todo{}, assert.AnError)
 
 		_, err := instance.service.CreateOne(context.Background(), &pb.CreateOneRequest{})
 

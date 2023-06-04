@@ -25,17 +25,27 @@ func (_m *TodoRepo) EXPECT() *TodoRepo_Expecter {
 }
 
 // CreateOne provides a mock function with given fields: ctx, props
-func (_m *TodoRepo) CreateOne(ctx context.Context, props *contract.TodoRepoCreateOneProps) error {
+func (_m *TodoRepo) CreateOne(ctx context.Context, props *contract.TodoRepoCreateOneProps) (entity.Todo, error) {
 	ret := _m.Called(ctx, props)
 
-	var r0 error
-	if rf, ok := ret.Get(0).(func(context.Context, *contract.TodoRepoCreateOneProps) error); ok {
+	var r0 entity.Todo
+	var r1 error
+	if rf, ok := ret.Get(0).(func(context.Context, *contract.TodoRepoCreateOneProps) (entity.Todo, error)); ok {
+		return rf(ctx, props)
+	}
+	if rf, ok := ret.Get(0).(func(context.Context, *contract.TodoRepoCreateOneProps) entity.Todo); ok {
 		r0 = rf(ctx, props)
 	} else {
-		r0 = ret.Error(0)
+		r0 = ret.Get(0).(entity.Todo)
 	}
 
-	return r0
+	if rf, ok := ret.Get(1).(func(context.Context, *contract.TodoRepoCreateOneProps) error); ok {
+		r1 = rf(ctx, props)
+	} else {
+		r1 = ret.Error(1)
+	}
+
+	return r0, r1
 }
 
 // TodoRepo_CreateOne_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'CreateOne'
@@ -57,12 +67,12 @@ func (_c *TodoRepo_CreateOne_Call) Run(run func(ctx context.Context, props *cont
 	return _c
 }
 
-func (_c *TodoRepo_CreateOne_Call) Return(_a0 error) *TodoRepo_CreateOne_Call {
-	_c.Call.Return(_a0)
+func (_c *TodoRepo_CreateOne_Call) Return(_a0 entity.Todo, _a1 error) *TodoRepo_CreateOne_Call {
+	_c.Call.Return(_a0, _a1)
 	return _c
 }
 
-func (_c *TodoRepo_CreateOne_Call) RunAndReturn(run func(context.Context, *contract.TodoRepoCreateOneProps) error) *TodoRepo_CreateOne_Call {
+func (_c *TodoRepo_CreateOne_Call) RunAndReturn(run func(context.Context, *contract.TodoRepoCreateOneProps) (entity.Todo, error)) *TodoRepo_CreateOne_Call {
 	_c.Call.Return(run)
 	return _c
 }

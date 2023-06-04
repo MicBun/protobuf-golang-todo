@@ -8,20 +8,16 @@ package internal
 
 import (
 	"context"
-	"github.com/MicBun/protobuf-golang-todo/internal/adapter/httpHandler"
 	"github.com/MicBun/protobuf-golang-todo/internal/domain/service"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/db"
-	"github.com/MicBun/protobuf-golang-todo/internal/infra/echo"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/factory"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/grpc"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/repo"
-	"github.com/MicBun/protobuf-golang-todo/internal/infra/route"
 )
 
 // Injectors from wire.go:
 
 func InitApp(ctx context.Context) (*App, error) {
-	echoEcho := echo.New()
 	gormDB, err := db.NewGormDB()
 	if err != nil {
 		return nil, err
@@ -31,11 +27,6 @@ func InitApp(ctx context.Context) (*App, error) {
 	postgresTransactionManager := db.NewPostgresTransactionManager(gormDB)
 	serviceTodo := service.NewTodo(repoTodo, postgresTransactionManager)
 	server := grpc.New(serviceTodo)
-	httpHandlerTodo := httpHandler.NewTodo(serviceTodo)
-	http := route.NewHTTP(httpHandlerTodo)
-	app, err := NewApp(echoEcho, server, gormDB, http)
-	if err != nil {
-		return nil, err
-	}
+	app := NewApp(server, gormDB)
 	return app, nil
 }

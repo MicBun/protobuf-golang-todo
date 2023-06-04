@@ -2,7 +2,6 @@ package repo
 
 import (
 	"context"
-	"fmt"
 	"github.com/MicBun/protobuf-golang-todo/internal/domain/contract"
 	"github.com/MicBun/protobuf-golang-todo/internal/domain/entity"
 	"github.com/MicBun/protobuf-golang-todo/internal/infra/factory"
@@ -41,22 +40,7 @@ func (r *Todo) CreateOne(ctx context.Context, props *contract.TodoRepoCreateOneP
 		return entity.Todo{}, errors.WithStack(err)
 	}
 
-	fmt.Println("todo: ", todo)
-
 	return r.factory.CreateFromPgModel(&todo), nil
-
-	////
-	////return query.
-	////	Model(&model.Todo{}).
-	////	Create(&model.Todo{
-	////		Task: props.Task,
-	////	}).Error
-	//
-	//return query.
-	//	Model(&model.Todo{}).
-	//	Create(&model.Todo{
-	//		Task: props.Task,
-	//	}).Error
 }
 
 func (r *Todo) FindAll(ctx context.Context, props *contract.TodoRepoFindAllProps) ([]entity.Todo, error) {

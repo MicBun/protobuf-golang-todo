@@ -40,7 +40,7 @@ func NewTodoServiceClient(cc grpc.ClientConnInterface) TodoServiceClient {
 
 func (c *todoServiceClient) GetMany(ctx context.Context, in *GetManyRequest, opts ...grpc.CallOption) (*TodoList, error) {
 	out := new(TodoList)
-	err := c.cc.Invoke(ctx, "/pb.TodoService/GetMany", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/TodoService/GetMany", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -49,7 +49,7 @@ func (c *todoServiceClient) GetMany(ctx context.Context, in *GetManyRequest, opt
 
 func (c *todoServiceClient) GetOne(ctx context.Context, in *wrapperspb.UInt32Value, opts ...grpc.CallOption) (*Todo, error) {
 	out := new(Todo)
-	err := c.cc.Invoke(ctx, "/pb.TodoService/GetOne", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/TodoService/GetOne", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -58,7 +58,7 @@ func (c *todoServiceClient) GetOne(ctx context.Context, in *wrapperspb.UInt32Val
 
 func (c *todoServiceClient) CreateOne(ctx context.Context, in *CreateOneRequest, opts ...grpc.CallOption) (*Todo, error) {
 	out := new(Todo)
-	err := c.cc.Invoke(ctx, "/pb.TodoService/CreateOne", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/TodoService/CreateOne", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +67,7 @@ func (c *todoServiceClient) CreateOne(ctx context.Context, in *CreateOneRequest,
 
 func (c *todoServiceClient) UpdateOne(ctx context.Context, in *UpdateOneRequest, opts ...grpc.CallOption) (*Todo, error) {
 	out := new(Todo)
-	err := c.cc.Invoke(ctx, "/pb.TodoService/UpdateOne", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/TodoService/UpdateOne", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -76,7 +76,7 @@ func (c *todoServiceClient) UpdateOne(ctx context.Context, in *UpdateOneRequest,
 
 func (c *todoServiceClient) DeleteOne(ctx context.Context, in *wrapperspb.UInt32Value, opts ...grpc.CallOption) (*Todo, error) {
 	out := new(Todo)
-	err := c.cc.Invoke(ctx, "/pb.TodoService/DeleteOne", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/TodoService/DeleteOne", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -137,7 +137,7 @@ func _TodoService_GetMany_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.TodoService/GetMany",
+		FullMethod: "/TodoService/GetMany",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TodoServiceServer).GetMany(ctx, req.(*GetManyRequest))
@@ -155,7 +155,7 @@ func _TodoService_GetOne_Handler(srv interface{}, ctx context.Context, dec func(
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.TodoService/GetOne",
+		FullMethod: "/TodoService/GetOne",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TodoServiceServer).GetOne(ctx, req.(*wrapperspb.UInt32Value))
@@ -173,7 +173,7 @@ func _TodoService_CreateOne_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.TodoService/CreateOne",
+		FullMethod: "/TodoService/CreateOne",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TodoServiceServer).CreateOne(ctx, req.(*CreateOneRequest))
@@ -191,7 +191,7 @@ func _TodoService_UpdateOne_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.TodoService/UpdateOne",
+		FullMethod: "/TodoService/UpdateOne",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TodoServiceServer).UpdateOne(ctx, req.(*UpdateOneRequest))
@@ -209,7 +209,7 @@ func _TodoService_DeleteOne_Handler(srv interface{}, ctx context.Context, dec fu
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/pb.TodoService/DeleteOne",
+		FullMethod: "/TodoService/DeleteOne",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(TodoServiceServer).DeleteOne(ctx, req.(*wrapperspb.UInt32Value))
@@ -221,7 +221,7 @@ func _TodoService_DeleteOne_Handler(srv interface{}, ctx context.Context, dec fu
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var TodoService_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "pb.TodoService",
+	ServiceName: "TodoService",
 	HandlerType: (*TodoServiceServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

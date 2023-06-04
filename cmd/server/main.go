@@ -58,6 +58,7 @@ func main() {
 		cancelServeCtx()
 	}()
 
+	log.Println("Start serving...")
 	err := app.Serve()
 	if err != nil {
 		log.Fatal(err)
